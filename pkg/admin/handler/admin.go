@@ -31,7 +31,7 @@ func (a Admin) LoginEmail(c echo.Context) error {
 	)
 	res, err := s.LoginByEmail(ctx, payload)
 	if err != nil {
-		return response.R400(c, nil, "")
+		return response.R400(c, payload, err.Error())
 	}
 	return response.R200(c, res, "")
 }

@@ -16,14 +16,22 @@ require (
 	cloud.google.com/go/iam v1.1.5 // indirect
 	cloud.google.com/go/longrunning v0.5.4 // indirect
 	cloud.google.com/go/storage v1.36.0 // indirect
+	github.com/KyleBanks/depth v1.2.1 // indirect
+	github.com/PuerkitoBio/purell v1.1.1 // indirect
+	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
 	github.com/armon/go-radix v1.0.0 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20200108200545-475eaeb16496 // indirect
 	github.com/elastic/go-licenser v0.3.1 // indirect
 	github.com/elastic/go-sysinfo v1.1.1 // indirect
 	github.com/elastic/go-windows v1.0.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
+	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/go-logr/logr v1.3.0 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
+	github.com/go-openapi/jsonpointer v0.19.5 // indirect
+	github.com/go-openapi/jsonreference v0.19.6 // indirect
+	github.com/go-openapi/spec v0.20.4 // indirect
+	github.com/go-openapi/swag v0.19.15 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang-jwt/jwt/v4 v4.4.2 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
@@ -34,11 +42,16 @@ require (
 	github.com/googleapis/gax-go/v2 v2.12.0 // indirect
 	github.com/jcchavezs/porto v0.1.0 // indirect
 	github.com/joeshaw/multierror v0.0.0-20140124173710-69b34d4ec901 // indirect
+	github.com/josharian/intern v1.0.0 // indirect
 	github.com/labstack/echo-jwt v0.0.0-20221127215225-c84d41a71003 // indirect
+	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/pkg/errors v0.8.1 // indirect
 	github.com/prometheus/procfs v0.0.0-20190425082905-87a4384529e0 // indirect
 	github.com/santhosh-tekuri/jsonschema v1.2.4 // indirect
 	github.com/sendgrid/rest v2.6.9+incompatible // indirect
+	github.com/swaggo/echo-swagger v1.4.1 // indirect
+	github.com/swaggo/files/v2 v2.0.0 // indirect
+	github.com/swaggo/swag v1.8.12 // indirect
 	go.elastic.co/apm v1.15.0 // indirect
 	go.elastic.co/fastjson v1.1.0 // indirect
 	go.opencensus.io v0.24.0 // indirect
@@ -51,10 +64,10 @@ require (
 	go.uber.org/multierr v1.10.0 // indirect
 	go.uber.org/zap v1.26.0 // indirect
 	golang.org/x/lint v0.0.0-20201208152925-83fdc39ff7b5 // indirect
-	golang.org/x/mod v0.8.0 // indirect
+	golang.org/x/mod v0.9.0 // indirect
 	golang.org/x/oauth2 v0.15.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
-	golang.org/x/tools v0.6.0 // indirect
+	golang.org/x/tools v0.7.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/api v0.155.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
@@ -63,6 +76,7 @@ require (
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20231212172506-995d672761c0 // indirect
 	google.golang.org/grpc v1.60.1 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 	howett.net/plist v0.0.0-20181124034731-591f970eefbb // indirect
 )
 

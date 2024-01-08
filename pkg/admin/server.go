@@ -7,6 +7,7 @@ import (
 	"github.com/ly1999-hub/go-go/internal/util/log"
 	"github.com/ly1999-hub/go-go/pkg/admin/initialize"
 	"github.com/ly1999-hub/go-go/pkg/admin/router"
+	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
 func Server(e *echo.Echo) {
@@ -16,7 +17,7 @@ func Server(e *echo.Echo) {
 	e.Use(config.RateLimiterConfig())
 	e.Use(config.LoggerWithConfig())
 	e.Use(middleware.Recover())
-
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
 	log.Init("server:___")
 	router.Init(e)
 }

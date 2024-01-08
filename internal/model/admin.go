@@ -81,6 +81,13 @@ type LoginByEmail struct {
 	Password string `json:"password"`
 }
 
+func (login LoginByEmail) Validate() error {
+	return validation.ValidateStruct(&login,
+		validation.Field(&login.Email, validation.Required.Error("Không được bỏ trống email."), is.EmailFormat.Error("định dạng là email: *@gmail.com")),
+		validation.Field(&login.Password, validation.Length(6, 50).Error("mật khẩu nhiều hơn 6 ký tự và ít hơn 50 ký tự")),
+	)
+}
+
 type ResLoginAdmin struct {
 	ID    string `json:"_id"`
 	Token string `json:"token"`

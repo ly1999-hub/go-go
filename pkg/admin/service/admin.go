@@ -168,13 +168,17 @@ func (a Admin) checkExistByEmail(ctx context.Context, email string) model.Admin 
 
 func (a Admin) LoginByEmail(ctx context.Context, payload model.LoginByEmail) (*model.ResLoginAdmin, error) {
 	admin := a.checkExistByEmail(ctx, payload.Email)
+
 	if admin.ID.IsZero() {
 		log.Error("ServiceAdmin-LoginByEmail ", log.LogData{"error": errors.New(response.CommonNotFound)})
 		return nil, errors.New(response.CommonNotFound)
 	}
+	if !util.CheckPassword(payload.Password, admin.HashedPassword) {
+		return nil, errors.New(response.CommonErrorPassword)
+	}
 	if !admin.Active {
 		log.Error("ServiceAdmin-LoginByEmail ", log.LogData{"error": errors.New(response.CommonNotFound)})
-		return nil, errors.New(response.CommonNotFound)
+		return nil, errors.New(response.CommonNotActive)
 	}
 	return generateToken(admin)
 }

@@ -31,6 +31,9 @@ func (a Admin) LoginEmail(next echo.HandlerFunc) echo.HandlerFunc {
 		if err := c.Bind(&payload); err != nil {
 			return response.R400(c, "", err.Error())
 		}
+		if err := payload.Validate(); err != nil {
+			return response.R400(c, nil, err.Error())
+		}
 		c.Set("admin_login", payload)
 		return next(c)
 	}

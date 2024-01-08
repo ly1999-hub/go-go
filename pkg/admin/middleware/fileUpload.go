@@ -30,8 +30,9 @@ func UploadSingleFile(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 		BUCKET_NAME := os.Getenv("BUCKET_NAME")
 
-		var fileString = "D:/Golang/GoAPI/internal/util/serviceAccountKey.json"
+		var fileString = "D:/Golang/GoAPI/serviceAccountKey.json"
 		opt := option.WithCredentialsFile(fileString)
+		fmt.Print(opt)
 		app, err := firebase.NewApp(context.Background(), nil, opt)
 		if err != nil {
 			fmt.Println(err.Error())

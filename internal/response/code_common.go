@@ -9,6 +9,7 @@ const (
 	CommonNotActive     = "common_not_active"
 	CommonErrorService  = "common_error_service"
 	CommonErrorSendgrid = "common_error_sendgrid"
+	CommonErrorPassword = "common_error_password"
 )
 
 var common = []Code{
@@ -19,7 +20,7 @@ var common = []Code{
 	},
 	{
 		Key:      CommonExistEmail,
-		Messenge: "da ton tai email",
+		Messenge: "đã tồn tại email",
 		Code:     50,
 	}, {
 		Key:      CommonUnauthorized,
@@ -27,7 +28,25 @@ var common = []Code{
 		Code:     401,
 	}, {
 		Key:      CommonBadRequest,
-		Messenge: "Yeu cau khong duoc thuc hien",
+		Messenge: "Yêu cầu không được thực hiện",
 		Code:     400,
+	}, {
+		Key:      CommonErrorPassword,
+		Messenge: "sai mật khẩu",
+		Code:     400,
+	},
+	{
+		Key:      CommonNotActive,
+		Messenge: "tài khoản bị khóa",
+		Code:     401,
+	}, {
+		Key:      CommonErrorService,
+		Messenge: "Lỗi server",
+		Code:     500,
+	},
+	{
+		Key:      CommonErrorSendgrid,
+		Messenge: "Lỗi khi thực hiện gửi email",
+		Code:     500,
 	},
 }
