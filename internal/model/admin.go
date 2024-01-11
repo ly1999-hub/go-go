@@ -1,8 +1,11 @@
 package model
 
 import (
+	"time"
+
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
+	"github.com/ly1999-hub/go-go/internal/util"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -56,6 +59,11 @@ type AdminForGetPassword struct {
 	Email string `json:"email"`
 }
 
+type AdminChangePassword struct {
+	OldPassword string `json:"old_password"`
+	NewPassword string `json:"new_password"`
+}
+
 // FileUploadInfo ...
 type FileUploadInfo struct {
 	Filename string `json:"filename"`
@@ -91,4 +99,22 @@ func (login LoginByEmail) Validate() error {
 type ResLoginAdmin struct {
 	ID    string `json:"_id"`
 	Token string `json:"token"`
+}
+
+func (a AdminCreate) NewAdmin() Admin {
+	return Admin{
+		ID:             primitive.NewObjectID(),
+		Name:           a.Name,
+		Email:          a.Email,
+		Phone:          a.Phone,
+		HashedPassword: util.HashedPassword(a.Password),
+		Birthday:       a.Birthday,
+		Avatar:         a.Avatar,
+		Address:        a.Address,
+		Role:           a.Role,
+		Root:           false,
+		Active:         true,
+		CreatedAt:      time.Now().GoString(),
+		UpdatedAt:      time.Now().GoString(),
+	}
 }

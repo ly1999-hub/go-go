@@ -78,3 +78,17 @@ func (a Admin) GetDetail(next echo.HandlerFunc) echo.HandlerFunc {
 		return next(c)
 	}
 }
+
+func (a Admin) ChangePassword(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		var (
+			payload = model.AdminChangePassword{}
+		)
+		if err := c.Bind(&payload); err != nil {
+			return response.R400(c, nil, err.Error())
+		}
+
+		c.Set("admin_change_password", payload)
+		return next(c)
+	}
+}

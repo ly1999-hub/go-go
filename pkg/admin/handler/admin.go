@@ -23,6 +23,31 @@ func (a Admin) Create(c echo.Context) error {
 	return response.R200(c, res, "")
 }
 
+func (a Admin) GetMe(c echo.Context) error {
+	var (
+		s   = service.Admin{}
+		me  = c.Get("admin").(model.Admin)
+		ctx = util.GetRequestContext(c)
+	)
+	res := s.GetMe(ctx, me)
+	return response.R200(c, res, "")
+}
+
+func (a Admin) GetDetail(c echo.Context) error {
+	var (
+		s       = service.Admin{}
+		admin   = c.Get("admin").(model.Admin)
+		ctx     = util.GetRequestContext(c)
+		payload = c.Get("admin_detail").(model.AdminDetail)
+	)
+
+	res, err := s.GetDetail(ctx, admin, payload)
+	if err != nil {
+		return response.R400(c, nil, err.Error())
+	}
+	return response.R200(c, res, "")
+}
+
 func (a Admin) LoginEmail(c echo.Context) error {
 	var (
 		payload = c.Get("admin_login").(model.LoginByEmail)
@@ -75,27 +100,16 @@ func (a Admin) UploadAvatar(c echo.Context) error {
 	return response.R200(c, res, "")
 }
 
-func (a Admin) GetDetail(c echo.Context) error {
+func (a Admin) ChangePassword(c echo.Context) error {
 	var (
 		s       = service.Admin{}
-		admin   = c.Get("admin").(model.Admin)
+		me      = c.Get("admin").(model.Admin)
 		ctx     = util.GetRequestContext(c)
-		payload = c.Get("admin_detail").(model.AdminDetail)
+		payload = c.Get("admin_change_password").(model.AdminChangePassword)
 	)
-
-	res, err := s.GetDetail(ctx, admin, payload)
+	res, err := s.ChangePassword(ctx, me, payload)
 	if err != nil {
 		return response.R400(c, nil, err.Error())
 	}
-	return response.R200(c, res, "")
-}
-
-func (a Admin) GetMe(c echo.Context) error {
-	var (
-		s   = service.Admin{}
-		me  = c.Get("admin").(model.Admin)
-		ctx = util.GetRequestContext(c)
-	)
-	res := s.GetMe(ctx, me)
 	return response.R200(c, res, "")
 }

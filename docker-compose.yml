@@ -4,8 +4,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    env_file:
-      - .env
+    environment:
+      - MONGO_HOST=mongodb
+      - MONGO_DBNAME=${MONGO_DBNAME}
+      - PORT=${PORT}
     ports:
       - "1323:1323"
     depends_on:
@@ -14,3 +16,6 @@ services:
     image: mongo
     ports:
       - "27017:27017"
+    expose:
+      - 27017
+    

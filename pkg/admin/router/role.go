@@ -3,8 +3,8 @@ package router
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/ly1999-hub/go-go/pkg/admin/handler"
-	"github.com/ly1999-hub/go-go/pkg/admin/middleware"
-	"github.com/ly1999-hub/go-go/pkg/admin/validation"
+	"github.com/ly1999-hub/go-go/pkg/admin/router/middleware"
+	"github.com/ly1999-hub/go-go/pkg/admin/router/validation"
 )
 
 func role(e *echo.Echo) {

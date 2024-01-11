@@ -79,7 +79,7 @@ func (a Admin) Create(ctx context.Context, payload model.AdminCreate) (*model.Re
 			ID:          primitive.NewObjectID(),
 			RoleName:    "ROOT",
 			Description: "ROOT",
-			Permissions: []string{"ADMIN", "USER"},
+			Permissions: []string{"ADMIN_VIEW", "ADMIN_CREATE", "ADMIN_EDIT", "ADMIN_DELETE", "USER_VIEW", "USER_CREATE", "USER_VIEW", "USER_DELETE"},
 			Code:        "ROOT",
 			CreatedAt:   time.Now().GoString(),
 			UpdatedAt:   time.Now().GoString(),
@@ -88,19 +88,6 @@ func (a Admin) Create(ctx context.Context, payload model.AdminCreate) (*model.Re
 			return nil, err
 		}
 	}
-	// 	if err := daoRole.InsertOne(ctx, model.Role{
-	// 		ID:          primitive.NewObjectID(),
-	// 		RoleName:    "ADMIN",
-	// 		Description: "ADMIN",
-	// 		Permissions: []string{"ADMIN"},
-	// 		Code:        "ADMIN",
-	// 		CreatedAt:   time.Now().GoString(),
-	// 		UpdatedAt:   time.Now().GoString(),
-	// 	}); err != nil {
-	// 		log.Error("Error-Insert ROOT_ROLE", log.LogData{"err": err.Error()})
-	// 		return nil, err
-	// 	}
-	// }
 	root := daoAdmin.FindOne(ctx, bson.M{"root": true})
 	if root.ID.IsZero() {
 		if err := daoAdmin.InsertOne(ctx, model.Admin{
@@ -135,21 +122,7 @@ func (a Admin) Create(ctx context.Context, payload model.AdminCreate) (*model.Re
 		return nil, errors.New(response.CommonNotFound)
 	}
 
-	doc := model.Admin{
-		ID:             primitive.NewObjectID(),
-		Name:           payload.Name,
-		Email:          payload.Email,
-		Phone:          payload.Phone,
-		HashedPassword: util.HashedPassword(payload.Password),
-		Birthday:       payload.Birthday,
-		Avatar:         payload.Avatar,
-		Address:        payload.Address,
-		Role:           role.ID.Hex(),
-		Root:           false,
-		Active:         true,
-		CreatedAt:      time.Now().GoString(),
-		UpdatedAt:      time.Now().GoString(),
-	}
+	doc := payload.NewAdmin()
 	err := daoAdmin.InsertOne(ctx, doc)
 	if err != nil {
 		log.Error("serviceAdmin-Create", log.LogData{"data": err.Error()})
@@ -181,20 +154,6 @@ func (a Admin) LoginByEmail(ctx context.Context, payload model.LoginByEmail) (*m
 		return nil, errors.New(response.CommonNotActive)
 	}
 	return generateToken(admin)
-}
-
-func generateToken(admin model.Admin) (*model.ResLoginAdmin, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"_id": admin.ID,
-		"exp": time.Now().Local().Add(time.Second * 15552000).Unix(), // 6 months
-	})
-	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET_KEY")))
-	fmt.Print(tokenString)
-	if err != nil {
-		log.Error("ServiceAdmin-generateToken ", log.LogData{"error": err.Error()})
-		return nil, errors.New(response.CommonNotFound)
-	}
-	return &model.ResLoginAdmin{ID: admin.ID.Hex(), Token: tokenString}, nil
 }
 
 func (a Admin) GetAll(ctx context.Context, payload model.All) (res model.ResponseList) {
@@ -319,4 +278,35 @@ func (s Admin) UploadAvatar(ctx context.Context, doc model.Admin, file model.Fil
 		return nil, errors.New(response.CommonErrorService)
 	}
 	return &model.ResponseUpdate{ID: doc.ID.Hex()}, nil
+}
+
+func (s Admin) ChangePassword(ctx context.Context, admin model.Admin, payload model.AdminChangePassword) (*model.ResLoginAdmin, error) {
+	var (
+		dao = dao.Admin{}
+	)
+	if !util.CheckPassword(payload.OldPassword, admin.HashedPassword) {
+		return nil, errors.New(response.CommonErrorService)
+	}
+	newPassword := util.HashedPassword(payload.NewPassword)
+	if err := dao.UpdateByID(ctx, admin.ID, bson.M{
+		"$set": bson.M{"hashed_password": newPassword},
+	}); err != nil {
+		log.Error("ADMIN_SERVICE ChangePassword", log.LogData{"error": err.Error()})
+		return nil, errors.New(response.CommonErrorService)
+	}
+	return generateToken(admin)
+}
+
+func generateToken(admin model.Admin) (*model.ResLoginAdmin, error) {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"_id": admin.ID,
+		"exp": time.Now().Local().Add(time.Second * 15552000).Unix(), // 6 months
+	})
+	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET_KEY")))
+	fmt.Print(tokenString)
+	if err != nil {
+		log.Error("ServiceAdmin-generateToken ", log.LogData{"error": err.Error()})
+		return nil, errors.New(response.CommonNotFound)
+	}
+	return &model.ResLoginAdmin{ID: admin.ID.Hex(), Token: tokenString}, nil
 }
