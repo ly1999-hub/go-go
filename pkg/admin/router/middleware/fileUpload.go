@@ -7,7 +7,9 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 
+	"cloud.google.com/go/storage"
 	firebase "firebase.google.com/go"
 	"github.com/google/uuid"
 	"github.com/joho/godotenv"
@@ -29,35 +31,8 @@ func UploadSingleFile(next echo.HandlerFunc) echo.HandlerFunc {
 			log.Fatal("Error loading .env file")
 		}
 		BUCKET_NAME := os.Getenv("BUCKET_NAME")
-
-		// var fileString = "D:/Golang/GoAPI/serviceAccountKey.json"
-		// opt := option.WithCredentialsFile(fileString)
-		// fmt.Print(opt)
-		CByte := []byte(fmt.Sprintf(`{
-			"type":"%s",
-			"project_id":"%s",
-			"private_key_id":"%s",
-			"private_key":"%s",
-			"client_email":"%s",
-			"client_id":"%s",
-			"auth_uri":"%s",
-			"token_uri":"%s",
-			"auth_provider_x509_cert_url":"%s",
-			"client_x509_cert_url":"%s",
-			"universe_domain":"%s"
-		}`, os.Getenv("TYPE"),
-			os.Getenv("PROJECT_ID"),
-			os.Getenv("PRIVATE_KEY_ID"),
-			os.Getenv("PRIVATE_KEY"),
-			os.Getenv("CLIENT_EMAIL"),
-			os.Getenv("CLIENT_ID"),
-			os.Getenv("AUTH_URL"),
-			os.Getenv("TOKEN_URL"),
-			os.Getenv("AUTH_PROVIDER_X509_CERT_URL"),
-			os.Getenv("CLIENT_X509_CERT_URL"),
-			os.Getenv("UNIVERSE_DOMAIN"),
-		))
-		opt := option.WithCredentialsJSON(CByte)
+		var fileString = "D:/Golang/GoAPI/serviceAccountKey.json"
+		opt := option.WithCredentialsFile(fileString)
 		app, err := firebase.NewApp(context.Background(), nil, opt)
 		if err != nil {
 			fmt.Println(err.Error())
@@ -84,11 +59,14 @@ func UploadSingleFile(next echo.HandlerFunc) echo.HandlerFunc {
 			return response.R400(c, nil, "")
 		}
 		defer src.Close()
-
-		objHandler := bucketHandler.Object(image.Filename)
-		write := objHandler.NewWriter(context.Background())
 		id := uuid.New()
 		id_string := id.String()
+		nameFile := image.Filename
+		name := strings.Split(nameFile, ".")
+		newNameFile := name[0] + id_string + "." + name[1]
+		objHandler := bucketHandler.Object(newNameFile)
+		write := objHandler.NewWriter(context.Background())
+
 		write.ObjectAttrs.Metadata = map[string]string{"firebaseStorageDownloadTokens": id.String()}
 		defer write.Close()
 		if _, err := io.Copy(write, src); err != nil {
@@ -105,6 +83,30 @@ func UploadSingleFile(next echo.HandlerFunc) echo.HandlerFunc {
 			Ext:      filepath.Ext(image.Filename),
 		})
 
+		return next(c)
+	}
+}
+
+func ChangeAvatar(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		ctx := context.Background()
+		// Khởi tạo client của Firebase Storage
+		client, err := storage.NewClient(ctx, option.WithCredentialsFile("path/to/your/firebase/credential.json"))
+		if err != nil {
+			fmt.Println("Lỗi khi khởi tạo client:", err)
+			return response.R400(c, nil, "")
+		}
+		defer client.Close()
+
+		// Đường dẫn tới ảnh cần xóa trong Firebase Storage
+
+		fileName := c.Get("file_name_delete").(string)
+		// Xóa ảnh từ Firebase Storage
+		err = client.Bucket("your-firebase-storage-bucket").Object(PathUpload + fileName).Delete(ctx)
+		if err != nil {
+			fmt.Println("Lỗi khi xóa ảnh từ Firebase Storage:", err)
+			return response.R400(c, nil, "")
+		}
 		return next(c)
 	}
 }

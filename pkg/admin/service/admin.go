@@ -285,7 +285,7 @@ func (s Admin) ChangePassword(ctx context.Context, admin model.Admin, payload mo
 		dao = dao.Admin{}
 	)
 	if !util.CheckPassword(payload.OldPassword, admin.HashedPassword) {
-		return nil, errors.New(response.CommonErrorService)
+		return nil, errors.New(response.CommonErrorPassword)
 	}
 	newPassword := util.HashedPassword(payload.NewPassword)
 	if err := dao.UpdateByID(ctx, admin.ID, bson.M{

@@ -1,5 +1,6 @@
 *.git
-.env
 *.log
 *.json
+.env
+Dockerfile
 *.exe
