@@ -239,7 +239,7 @@ func SendEmailSendGrid(toEmail string, subject string, content string) error {
 	to := mail.NewEmail("To", toEmail)
 	//htmlContent := mail.NewContent("text/html", contentHTML.String())
 	message := mail.NewSingleEmail(from, subject, to, content, contentHTML.String())
-	client := sendgrid.NewSendClient("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")
+	client := sendgrid.NewSendClient(os.Getenv("API_KEY_SENDGRID"))
 	response, err := client.Send(message)
 	if err != nil {
 		fmt.Println(err)
