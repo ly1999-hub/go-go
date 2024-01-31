@@ -49,3 +49,13 @@ func (h Role) Update(c echo.Context) error {
 	}
 	return response.R200(c, nil, "")
 }
+
+func (h Role) All(c echo.Context) error {
+	var (
+		s    = service.Role{}
+		ctx  = util.GetRequestContext(c)
+		page = c.Get("all-role").(model.All)
+	)
+	res := s.All(ctx, page)
+	return response.R200(c, res, "")
+}

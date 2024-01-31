@@ -71,3 +71,15 @@ func (v Role) Detail(next echo.HandlerFunc) echo.HandlerFunc {
 		return next(c)
 	}
 }
+
+func (v Role) All(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		var page model.All
+		if err := c.Bind(&page); err != nil {
+			return response.R400(c, nil, "")
+		}
+		c.Set("all-role", page)
+		fmt.Print(page)
+		return next(c)
+	}
+}

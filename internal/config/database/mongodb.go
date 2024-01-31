@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"github.com/logrusorgru/aurora"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -12,30 +13,16 @@ import (
 var db *mongo.Database
 
 // Connect to mongo server
-func Connect(host, user, password, dbName, mechanism, source string) error {
-	connectOptions := options.ClientOptions{}
-	// Set auth if existed
-	if user != "" && password != "" {
-		connectOptions.Auth = &options.Credential{
-			AuthMechanism: mechanism,
-			AuthSource:    source,
-			Username:      user,
-			Password:      password,
-		}
-	}
-
-	// Connect
-	client, err := mongo.Connect(context.Background(), connectOptions.ApplyURI(host))
+func Connect() error {
+	opts := options.Client().ApplyURI(os.Getenv("MONGODB_SRV"))
+	// Create a new client and connect to the server
+	client, err := mongo.Connect(context.TODO(), opts)
 	if err != nil {
-		fmt.Println("Error when connect to MongoDB database", host, err)
-		return err
+		aurora.Red(err.Error())
+		fmt.Println(err.Error())
+		panic(err)
 	}
-
-	fmt.Println(aurora.Green("*** CONNECTED TO MONGODB: " + host + " - DB NAME: " + dbName))
-
-	// Set data
-	db = client.Database(dbName)
-
+	db = client.Database(os.Getenv("DATABASE_NAME"))
 	return nil
 }
 

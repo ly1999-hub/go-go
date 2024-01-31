@@ -84,3 +84,12 @@ func (s Role) Update(ctx context.Context, roleID primitive.ObjectID, payload mod
 	}
 	return nil
 }
+
+func (s Role) All(c context.Context, page model.All) (res model.ResponseList) {
+	var (
+		dao = dao.Role{}
+	)
+	result := dao.FindAll(c, bson.M{})
+	res.List = result
+	return
+}

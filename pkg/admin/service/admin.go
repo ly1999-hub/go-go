@@ -20,7 +20,6 @@ import (
 	"github.com/ly1999-hub/go-go/pkg/admin/dao"
 	"github.com/sendgrid/sendgrid-go"
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -73,42 +72,42 @@ func (a Admin) Create(ctx context.Context, payload model.AdminCreate) (*model.Re
 		daoAdmin = dao.Admin{}
 		daoRole  = dao.Role{}
 	)
-	roleAdmin := daoRole.FindOne(ctx, bson.M{"code": "ROOT"})
-	if roleAdmin.ID.IsZero() {
-		if err := daoRole.InsertOne(ctx, model.Role{
-			ID:          primitive.NewObjectID(),
-			RoleName:    "ROOT",
-			Description: "ROOT",
-			Permissions: []string{"ADMIN_VIEW", "ADMIN_CREATE", "ADMIN_EDIT", "ADMIN_DELETE", "USER_VIEW", "USER_CREATE", "USER_VIEW", "USER_DELETE"},
-			Code:        "ROOT",
-			CreatedAt:   time.Now().GoString(),
-			UpdatedAt:   time.Now().GoString(),
-		}); err != nil {
-			log.Error("Error-Insert ROOT_ROLE", log.LogData{"err": err.Error()})
-			return nil, err
-		}
-	}
-	root := daoAdmin.FindOne(ctx, bson.M{"root": true})
-	if root.ID.IsZero() {
-		if err := daoAdmin.InsertOne(ctx, model.Admin{
-			ID:             primitive.NewObjectID(),
-			Name:           "root",
-			Email:          "root@gmail.com",
-			Phone:          "0967606851",
-			Role:           "ROOT",
-			HashedPassword: util.HashedPassword("root"),
-			Active:         true,
-			Root:           true,
-			Login:          false,
-			Birthday:       "25/01/1999",
-			Avatar:         "",
-			Address:        "da nang",
-			CreatedAt:      time.Now().String(),
-			UpdatedAt:      time.Now().String(),
-		}); err != nil {
-			return nil, err
-		}
-	}
+	// roleAdmin := daoRole.FindOne(ctx, bson.M{"code": "ROOT"})
+	// if roleAdmin.ID.IsZero() {
+	// 	if err := daoRole.InsertOne(ctx, model.Role{
+	// 		ID:          primitive.NewObjectID(),
+	// 		RoleName:    "ROOT",
+	// 		Description: "ROOT",
+	// 		Permissions: []string{"ADMIN_VIEW", "ADMIN_CREATE", "ADMIN_EDIT", "ADMIN_DELETE", "USER_VIEW", "USER_CREATE", "USER_VIEW", "USER_DELETE"},
+	// 		Code:        "ROOT",
+	// 		CreatedAt:   time.Now().GoString(),
+	// 		UpdatedAt:   time.Now().GoString(),
+	// 	}); err != nil {
+	// 		log.Error("Error-Insert ROOT_ROLE", log.LogData{"err": err.Error()})
+	// 		return nil, err
+	// 	}
+	// }
+	// root := daoAdmin.FindOne(ctx, bson.M{"root": true})
+	// if root.ID.IsZero() {
+	// 	if err := daoAdmin.InsertOne(ctx, model.Admin{
+	// 		ID:             primitive.NewObjectID(),
+	// 		Name:           "root",
+	// 		Email:          "root@gmail.com",
+	// 		Phone:          "0967606851",
+	// 		Role:           "ROOT",
+	// 		HashedPassword: util.HashedPassword("root"),
+	// 		Active:         true,
+	// 		Root:           true,
+	// 		Login:          false,
+	// 		Birthday:       "25/01/1999",
+	// 		Avatar:         "",
+	// 		Address:        "da nang",
+	// 		CreatedAt:      time.Now().String(),
+	// 		UpdatedAt:      time.Now().String(),
+	// 	}); err != nil {
+	// 		return nil, err
+	// 	}
+	// }
 	if !a.checkExistByEmail(ctx, payload.Email).ID.IsZero() {
 		log.Error("serviceRole-Update", log.LogData{
 			"error": errors.New(response.CommonExistEmail),
@@ -308,5 +307,6 @@ func generateToken(admin model.Admin) (*model.ResLoginAdmin, error) {
 		log.Error("ServiceAdmin-generateToken ", log.LogData{"error": err.Error()})
 		return nil, errors.New(response.CommonNotFound)
 	}
+	
 	return &model.ResLoginAdmin{ID: admin.ID.Hex(), Token: tokenString}, nil
 }

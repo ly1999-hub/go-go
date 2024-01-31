@@ -92,7 +92,7 @@ type LoginByEmail struct {
 func (login LoginByEmail) Validate() error {
 	return validation.ValidateStruct(&login,
 		validation.Field(&login.Email, validation.Required.Error("Không được bỏ trống email."), is.EmailFormat.Error("định dạng là email: *@gmail.com")),
-		validation.Field(&login.Password, validation.Length(6, 50).Error("mật khẩu nhiều hơn 6 ký tự và ít hơn 50 ký tự")),
+		validation.Field(&login.Password, validation.Length(4, 50).Error("mật khẩu nhiều hơn 4 ký tự và ít hơn 50 ký tự")),
 	)
 }
 
@@ -114,7 +114,7 @@ func (a AdminCreate) NewAdmin() Admin {
 		Role:           a.Role,
 		Root:           false,
 		Active:         true,
-		CreatedAt:      time.Now().GoString(),
-		UpdatedAt:      time.Now().GoString(),
+		CreatedAt:      time.Now().String(),
+		UpdatedAt:      time.Now().String(),
 	}
 }
