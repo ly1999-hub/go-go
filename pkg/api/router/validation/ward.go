@@ -6,21 +6,15 @@ import (
 	"github.com/ly1999-hub/go-go/internal/response"
 )
 
-type Dish struct{}
+type Ward struct{}
 
-func (v Dish) Create(next echo.HandlerFunc) echo.HandlerFunc {
+func (v Ward) CreateMany(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		var payload model.DishCreate
+		var payload model.WardCreateMany
 		if err := c.Bind(&payload); err != nil {
 			return response.R400(c, nil, "")
 		}
-		c.Set("dish_create", payload)
+		c.Set("wards_create", payload)
 		return next(c)
 	}
 }
-
-// func (v Dish) GetAllByRestaurant(next echo.HandlerFunc) echo.HandlerFunc {
-// 	return func(c echo.Context) error {
-
-// 	}
-// }

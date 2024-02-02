@@ -14,5 +14,7 @@ func Init(e *echo.Echo) {
 	dish(e)
 	customer(e)
 	restaurant(e)
-
+	province(e)
+	district(e)
+	ward(e)
 }

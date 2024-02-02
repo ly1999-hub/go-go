@@ -2,6 +2,8 @@ package service
 
 import (
 	"context"
+	"fmt"
+	"sync"
 	"time"
 
 	"github.com/ly1999-hub/go-go/internal/model"
@@ -29,6 +31,7 @@ func (s Dish) Create(ctx context.Context,
 	docs := make([]interface{}, 0)
 	list := payloads.ToDish()
 	for _, doc := range list {
+		doc.Restaurant = restaurant.ID
 		docs = append(docs, doc)
 	}
 	res := daoDish.InsertMany(ctx, docs)
@@ -44,4 +47,32 @@ func (s Dish) Create(ctx context.Context,
 		return nil, err
 	}
 	return &model.ResponseUpdate{ID: restaurant.ID.Hex()}, nil
+}
+
+func (s Dish) GetAllByRestaurant(ctx context.Context, id primitive.ObjectID) (res model.ResponseList) {
+	var (
+		dao = dao.Dish{}
+		wg  sync.WaitGroup
+	)
+	fmt.Println(id)
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		//opts.SetSort(bson.M{"$sort": bson.M{"price": -1}})
+		docs := dao.FindByCond(ctx, bson.M{"restaurant": id})
+		res.List = docs
+		fmt.Println(res.List)
+	}()
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		count := dao.CountByCond(ctx, bson.M{"restaurant": id})
+		if count != -1 {
+			res.Total = count
+			fmt.Println(res.Total)
+		}
+	}()
+	wg.Wait()
+	fmt.Println(res)
+	return
 }

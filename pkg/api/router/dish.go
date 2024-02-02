@@ -8,9 +8,10 @@ import (
 )
 
 func dish(e *echo.Echo) {
-	g := e.Group("/dish", middleware.RequireLogin, middleware.CheckPermission("RESTAURANT_EDIT"))
+	g := e.Group("/dish")
 	h := handler.Dish{}
 	v := validation.Dish{}
 
-	g.POST("/:restaurant/create", h.Create, v.Create)
+	g.POST("/:restaurant/create", h.Create, middleware.RequireLogin, middleware.CheckPermission("RESTAURANT_EDIT"), v.Create)
+	g.GET("/:restaurant", h.GetAllByRestaurant)
 }
