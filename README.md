@@ -1,8 +1,9 @@
 # go-go
 Dự án cung cấp API cho chức năng:
-- quản lí nhân viên(thêm, sửa, xóa và các thao tác trên dữ liệu người dùng bởi người có quyền)
-- quản lí quyền.(quản lí các quyền của người dùng với từng vai trò khác nhau)
-- xác thực và phân quyền cho người dùng đăng nhập trong một dự án phần mềm.
+- Admin quản lý chuỗi các nhà hàng và người dùng dựa vào quyền được cấp bởi tài khoản root.
+- Các nhà hàng có thể tự quản lý các sản phẩn cung cấp.
+- người dùng có thể xem danh sách các nhà hàng, lựa chọn món và đặt bàn.
+- xác thực và phân quyền cho tất cả các đối tượng sử dụng hệ thống.
 
 ## Công Nghệ.
 1.Dự án sử dụng framework echo Golang xây dựng hệ thống back-end.
