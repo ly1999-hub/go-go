@@ -2,6 +2,7 @@ package dao
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/ly1999-hub/go-go/internal/config/database"
 	"github.com/ly1999-hub/go-go/internal/model"
@@ -21,6 +22,20 @@ func (d User) InsertOne(ctx context.Context, doc model.User) error {
 		return err
 	}
 	return nil
+}
+
+func (d User) FindOne(ctx context.Context, filter interface{}) (doc model.User) {
+	var col = d.getCollection()
+
+	err := col.FindOne(ctx, filter).Decode(&doc)
+	if err != nil {
+		log.Error("Error FindOne User-Dao", log.LogData{
+			"filter": filter,
+			"Error":  err.Error(),
+		})
+	}
+	fmt.Print(doc)
+	return
 }
 
 func (d User) getCollection() *mongo.Collection {

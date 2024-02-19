@@ -23,3 +23,29 @@ func (u User) Create(c echo.Context) error {
 	}
 	return response.R200(c, res, "")
 }
+
+func (u User) LoginByPhone(c echo.Context) error {
+	var (
+		s       = service.User{}
+		payload = c.Get("user_login").(model.UserLoginByPhone)
+		ctx     = util.GetRequestContext(c)
+	)
+	res, err := s.LoginByPhone(ctx, payload)
+	if err != nil {
+		return response.R400(c, nil, err.Error())
+	}
+	return response.R200(c, res, "")
+}
+
+func (u User) Order(c echo.Context) error {
+	var (
+		ctx     = util.GetRequestContext(c)
+		payload = c.Get("order_request").(model.OrderRequest)
+		s       = service.User{}
+	)
+	res, err := s.Order(ctx, payload)
+	if err != nil {
+		return response.R500(c, nil, err.Error())
+	}
+	return response.R200(c, res, "")
+}

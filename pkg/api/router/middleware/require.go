@@ -11,12 +11,13 @@ import (
 	"github.com/ly1999-hub/go-go/internal/util"
 	"github.com/ly1999-hub/go-go/pkg/api/dao"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"gopkg.in/mgo.v2/bson"
 )
 
 func RequireLogin(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var dao = dao.Customer{}
-		idCustomer := getIDCustomerFromContext(c)
+		idCustomer := getIDFromContext(c)
 		if idCustomer.IsZero() {
 			return response.R401(c, nil, "")
 		}
@@ -29,7 +30,23 @@ func RequireLogin(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
-func getIDCustomerFromContext(c echo.Context) (id primitive.ObjectID) {
+func RequireUserLogin(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		var dao = dao.User{}
+		idUser := getIDFromContext(c)
+		if idUser.IsZero() {
+			return response.R401(c, nil, "")
+		}
+		doc := dao.FindOne(util.GetRequestContext(c), bson.M{"_id": idUser})
+		if !doc.Active {
+			return response.R401(c, "", "")
+		}
+		c.Set("user_login", doc)
+		return next(c)
+	}
+}
+
+func getIDFromContext(c echo.Context) (id primitive.ObjectID) {
 	authHeader := c.Request().Header.Get(constant.HeaderAuthorization)
 	if authHeader == "" {
 		return

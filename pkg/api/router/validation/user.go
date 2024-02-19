@@ -21,3 +21,14 @@ func (u User) Create(next echo.HandlerFunc) echo.HandlerFunc {
 		return next(c)
 	}
 }
+
+func (u User) LoginByPhone(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		var payload model.UserLoginByPhone
+		if err := c.Bind(&payload); err != nil {
+			return response.R400(c, nil, err.Error())
+		}
+		c.Set("user_login", payload)
+		return next(c)
+	}
+}

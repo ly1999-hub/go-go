@@ -12,5 +12,5 @@ func customer(e *echo.Echo) {
 	v := validation.Customer{}
 	g.POST("/", h.Create, v.Create)
 	g.POST("/login-email", h.LoginByEmail, v.LoginByEmail)
-
+	
 }

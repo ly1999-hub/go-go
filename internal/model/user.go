@@ -20,6 +20,21 @@ type User struct {
 	CreatedAt string             `bson:"created_at"`
 }
 
+type ResLoginUser struct {
+	ID    string
+	Token string
+}
+
+type UserLoginByPhone struct {
+	Phone    string `json:"phone"`
+	Password string `json:"password"`
+}
+
+type ResUserLogin struct {
+	ID    string
+	Token string
+}
+
 type UserCreate struct {
 	UserName string `json:"user_name"`
 	Phone    string `json:"phone"`
@@ -46,4 +61,16 @@ func (u UserCreate) ToUser() User {
 		CreatedAt: time.Now().String(),
 	}
 	return doc
+}
+
+func (u User) ToUserRespone() User {
+	return User{
+		ID:        u.ID,
+		UserName:  u.UserName,
+		Phone:     u.Phone,
+		Email:     u.Email,
+		Login:     u.Login,
+		Active:    u.Active,
+		CreatedAt: u.CreatedAt,
+	}
 }

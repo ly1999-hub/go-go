@@ -2,6 +2,7 @@ package response
 
 const (
 	CommonSuccess       = "common_success"
+	CommonCreated       = "common_created"
 	CommonNotFound      = "common_not_found"
 	CommonExistEmail    = "common_exist_email"
 	CommonUnauthorized  = "common_unauthorized"
@@ -10,6 +11,8 @@ const (
 	CommonErrorService  = "common_error_service"
 	CommonErrorSendgrid = "common_error_sendgrid"
 	CommonErrorPassword = "common_error_password"
+	CommonForbidden     = "common_forbidden"
+	CommonNoContent     = "common_no_content"
 )
 
 var common = []Code{
@@ -48,5 +51,20 @@ var common = []Code{
 		Key:      CommonErrorSendgrid,
 		Messenge: "Lỗi khi thực hiện gửi email",
 		Code:     500,
+	},
+	{
+		Key:      CommonForbidden,
+		Messenge: "Server từ chối đáp ứng yêu cầu",
+		Code:     403,
+	},
+	{
+		Key:      CommonCreated,
+		Messenge: "Tạo thành công",
+		Code:     201,
+	},
+	{
+		Key:      CommonNoContent,
+		Messenge: "không có dữ liệu",
+		Code:     204,
 	},
 }
